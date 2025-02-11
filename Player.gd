@@ -19,11 +19,15 @@ var state = MOVE
 var velocity = Vector2.ZERO
 var roll_vector = Vector2.DOWN
 var stats = PlayerStats
+var wannaAttack = false
+var wannaRoll = false
 
 onready var animationPlayer = $AnimationPlayer
+onready var conductor = $Conductor
 onready var animationTree = $AnimationTree
 onready var SwordHitbox = $HitboxPivot/Sword_Hitbox
 onready var hurtbox = $Hurtbox
+#onready var conductor = $Conductor
 onready var animationState = animationTree.get("parameters/playback")
 onready var blinckAnimationPlayer = $BlinkAnimationPlayer
 onready var rollTimer = $RollTimer
@@ -34,6 +38,9 @@ func _ready():
 	stats.connect("no_health", self, "queue_free")
 	animationTree.active = true
 	SwordHitbox.Knockback_vector = roll_vector
+	
+func check_conductor(conductor):
+	print(conductor)
 	
 func _physics_process(delta):
 	match state:
@@ -67,9 +74,9 @@ func move_state(delta):
 	
 	velocity = move_and_slide(velocity)
 	if Input.is_action_just_pressed("Atack") and atackTimer.time_left == 0:
-		state = ATACK
+		wannaAttack = true
 	if Input.is_action_just_pressed("Roll") and rollTimer.time_left == 0:
-		state = ROLL
+		wannaRoll = true
 
 func roll_state(_delta):
 	animationState.travel("Roll")
@@ -105,3 +112,22 @@ func _on_Hurtbox_invincibility_started():
 
 func _on_Hurtbox_invincibility_ended():
 	blinckAnimationPlayer.play("Stop")
+
+func _on_Conductor_quarter_passed(beat):
+	print('aaa', beat)
+	if(wannaAttack):
+		state = ATACK
+		wannaAttack = false
+	
+	if(wannaRoll):
+		state = ROLL
+		wannaRoll = false
+	
+func _on_Conductor_eighth_passed(beat, fract):
+	pass
+
+func _on_Conductor_twelth_passed(beat, fract):
+	pass 
+
+func _on_Conductor_sixteenth_passed(beat, fract):
+	pass
