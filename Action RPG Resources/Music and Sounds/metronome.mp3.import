@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/metronome.mp3-7f44e14a4bb8af2cbfc082246043a602.mp3str"
+
+[deps]
+
+source_file="res://Action RPG Resources/Music and Sounds/metronome.mp3"
+dest_files=[ "res://.import/metronome.mp3-7f44e14a4bb8af2cbfc082246043a602.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0
