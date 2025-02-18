@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/60 BPM - Metronome.mp3-e006be7279323b19fb27fa2e8bc85d48.mp3str"
+
+[deps]
+
+source_file="res://Action RPG Resources/Music and Sounds/60 BPM - Metronome.mp3"
+dest_files=[ "res://.import/60 BPM - Metronome.mp3-e006be7279323b19fb27fa2e8bc85d48.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
