@@ -15,7 +15,7 @@ signal sixteenth_will_pass(beat, fract)
 
 export var curr_beat: float = 0
 export var curr_beat_without_latency: float = 0
-export var bpm: float = 60
+export var bpm: float = 135
 export var is_playing: bool = false
 export var audio_offset_ms: int = 0
 export var visual_offset_ms: int = 0
