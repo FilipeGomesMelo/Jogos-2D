@@ -15,7 +15,7 @@ signal sixteenth_will_pass(beat, fract)
 
 export var curr_beat: float = 0
 export var curr_beat_without_latency: float = 0
-export var bpm: float = 135
+export var bpm: float = 125
 export var is_playing: bool = false
 export var audio_offset_ms: int = 0
 export var visual_offset_ms: int = 0
@@ -61,6 +61,9 @@ class BeatIncrementor:
 				_conductor.emit_signal(_signal, _last_beat)
 			else:
 				_conductor.emit_signal(_signal, _last_beat, _last_fract)
+
+func _ready() -> void:
+	self.play()
 
 func play() -> void:
 	_prev_time_seconds = -_cached_latency - 0.001

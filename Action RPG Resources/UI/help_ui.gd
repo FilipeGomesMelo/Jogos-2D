@@ -10,8 +10,6 @@ var check3 = true
 onready var heart_ui_full = $HeartUIFull
 onready var heart_ui_empty = $HeartUIEmpty
 onready var conductor = $Conductor
-onready var one_bar = $one_bar
-onready var four_bars = $four_bars
 
 func set_hearts(value):
 	hearts = clamp(value, 0, max_hearts)
@@ -32,10 +30,6 @@ func check_conductor(conductor):
 func changePosition():
 	heart_ui_full.rect_position = Vector2(0, 0)
 	heart_ui_empty.rect_position = Vector2(0, 0)
-	
-func updateBars(value):
-	var bars = clamp(value, 0, 4)
-	four_bars.rect_size.x = bars * 100
 
 func _ready():
 	self.max_hearts = PlayerStats.max_health
@@ -46,28 +40,18 @@ func _ready():
 
 
 func _on_Conductor_eighth_passed(beat, fract):
-	print(8)
 	if check3:
-		updateBars(3)
 		check3 = false
 
 func _on_Conductor_quarter_passed(beat):
-	print(4)
-	updateBars(4)
 	if !position:
 		heart_ui_full.rect_scale= Vector2(1.1, 1.1)
 		heart_ui_empty.rect_scale= Vector2(1.1, 1.1)
 		heart_ui_empty.rect_position = Vector2(2, 10)
-		four_bars.rect_scale= Vector2(0.085, 0.065)
-		one_bar.rect_scale= Vector2(0.085, 0.065)
-		one_bar.rect_position = Vector2(286.5, 7)
 	else :
 		heart_ui_empty.rect_position = Vector2(2, 8)
 		heart_ui_full.rect_scale= Vector2(1, 1)
 		heart_ui_empty.rect_scale= Vector2(1, 1)
-		four_bars.rect_scale= Vector2(0.07, 0.056)
-		one_bar.rect_scale= Vector2(0.07, 0.056)
-		one_bar.rect_position = Vector2(285, 5)
 	position = !position
 	check1 = true
 	check2 = true
@@ -77,14 +61,10 @@ func _on_Conductor_quarter_passed(beat):
 
 
 func _on_Conductor_sixteenth_passed(beat, fract):
-	print(16)
 	if check1:
-		updateBars(1)
 		check1 = false
 
 
 func _on_Conductor_twelth_passed(beat, fract):
-	print(12)
 	if check2:
-		updateBars(2)
 		check2 = false

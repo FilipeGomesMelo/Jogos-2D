@@ -40,15 +40,12 @@ onready var animationState = animationTree.get("parameters/playback")
 onready var blinckAnimationPlayer = $BlinkAnimationPlayer
 onready var rollTimer = $RollTimer
 onready var atackTimer = $AtackTimer
-onready var conductor = $Conductor
-onready var metronomePlayer = $MetronomeSound
 
 func _ready():
 	randomize()
 	stats.connect("no_health", self, "queue_free")
 	animationTree.active = true
 	SwordHitbox.Knockback_vector = roll_vector
-	conductor.play()
 	last_beat_time = OS.get_ticks_msec() / 1000.0
 	
 func check_conductor(conductor):
@@ -136,14 +133,8 @@ func _on_Hurtbox_invincibility_ended():
 
 func _on_Conductor_quarter_passed(beat):
 	last_beat_time = OS.get_ticks_msec() / 1000.0
-	
-	metronomePlayer.play()
 	if last_input == "Atack":
 		state = ATACK
 	if last_input == "Roll":
 		state = ROLL
 	last_input = null
-
-
-func _on_Conductor_quarter_will_pass(beat):
-	metronomePlayer.play()
