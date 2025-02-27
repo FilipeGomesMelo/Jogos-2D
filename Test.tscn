@@ -1,0 +1,105 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Action RPG Resources/Player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Action RPG Resources/World/Bush.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Action RPG Resources/World/Grass.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Action RPG Resources/Enemies/Bat.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Action RPG Resources/UI/help_ui.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Action RPG Resources/World/Tree.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Action RPG Resources/Music and Sounds/Music.mp3" type="AudioStream" id=10]
+[ext_resource path="res://Action RPG Resources/UI/Camera2D.tscn" type="PackedScene" id=11]
+
+[node name="World" type="Node2D"]
+
+[node name="Camera2D" parent="." instance=ExtResource( 11 )]
+position = Vector2( 152, 80 )
+zoom = Vector2( 1.2, 1.2 )
+limit_left = -10000000
+limit_top = -10000000
+limit_right = 10000000
+limit_bottom = 10000000
+smoothing_speed = 10.0
+
+[node name="TopLeft" parent="Camera2D/Limits" index="0"]
+position = Vector2( -256, -192 )
+
+[node name="BottomRight" parent="Camera2D/Limits" index="1"]
+position = Vector2( 576, 376 )
+
+[node name="YSort" type="YSort" parent="."]
+
+[node name="Bushes" type="YSort" parent="YSort"]
+
+[node name="Bush2" parent="YSort/Bushes" instance=ExtResource( 2 )]
+position = Vector2( 194.385, 97.8578 )
+
+[node name="Bush1" parent="YSort/Bushes" instance=ExtResource( 2 )]
+position = Vector2( 217.401, 51.0502 )
+
+[node name="Bush4" parent="YSort/Bushes" instance=ExtResource( 2 )]
+position = Vector2( 76.6862, 19.9375 )
+
+[node name="Bush3" parent="YSort/Bushes" instance=ExtResource( 2 )]
+position = Vector2( 39.2096, 138.731 )
+
+[node name="Grass" type="YSort" parent="YSort"]
+
+[node name="Grass" parent="YSort/Grass" instance=ExtResource( 6 )]
+position = Vector2( 112, 112 )
+
+[node name="Grass60" parent="YSort/Grass" instance=ExtResource( 6 )]
+position = Vector2( 128, 144 )
+
+[node name="Grass61" parent="YSort/Grass" instance=ExtResource( 6 )]
+position = Vector2( 88, 136 )
+
+[node name="Bats" type="YSort" parent="YSort"]
+
+[node name="Bat" parent="YSort/Bats" instance=ExtResource( 7 )]
+position = Vector2( 272, 80 )
+ACELLERATION = 500
+
+[node name="Bat9" parent="YSort/Bats" instance=ExtResource( 7 )]
+position = Vector2( 184, -32 )
+
+[node name="Bat13" parent="YSort/Bats" instance=ExtResource( 7 )]
+position = Vector2( 40, -80 )
+
+[node name="YSort" type="YSort" parent="YSort"]
+
+[node name="Tree" parent="YSort/YSort" instance=ExtResource( 9 )]
+position = Vector2( 16, 32 )
+
+[node name="Tree2" parent="YSort/YSort" instance=ExtResource( 9 )]
+position = Vector2( 240, 120 )
+
+[node name="Tree4" parent="YSort/YSort" instance=ExtResource( 9 )]
+position = Vector2( 240, 16 )
+
+[node name="Tree17" parent="YSort/YSort" instance=ExtResource( 9 )]
+position = Vector2( 144, -16 )
+
+[node name="Tree7" parent="YSort/YSort" instance=ExtResource( 9 )]
+position = Vector2( 8, -32 )
+
+[node name="Tree13" parent="YSort/YSort" instance=ExtResource( 9 )]
+position = Vector2( 112, 208 )
+
+[node name="Tree19" parent="YSort/YSort" instance=ExtResource( 9 )]
+position = Vector2( -80, 144 )
+
+[node name="Player" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 152, 80 )
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/Player"]
+remote_path = NodePath("../../../Camera2D")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="help_ui" parent="CanvasLayer" instance=ExtResource( 8 )]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+autoplay = true
+
+[editable path="Camera2D"]

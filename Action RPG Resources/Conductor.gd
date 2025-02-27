@@ -62,9 +62,6 @@ class BeatIncrementor:
 			else:
 				_conductor.emit_signal(_signal, _last_beat, _last_fract)
 
-func _ready() -> void:
-	self.play()
-
 func play() -> void:
 	_prev_time_seconds = -_cached_latency - 0.001
 	curr_beat = _prev_time_seconds / 60 * bpm
