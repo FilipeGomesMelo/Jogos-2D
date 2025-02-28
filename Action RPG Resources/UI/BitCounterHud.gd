@@ -7,12 +7,17 @@ export var circle_texture: Texture  # Defina a textura do círculo no editor
 onready var beats_container = $BeatsContainer
 onready var endzone = $Endzone
 onready var conductor = $Conductor
+var bigEndzone = false
 
 func _ready():
 	pass
 	
 func _on_Conductor_quarter_passed(beat):
-			# Criar um círculo
+	
+	endzone.rect_scale =  Vector2(1, 1) if bigEndzone else Vector2(1.1, 1.1)
+	bigEndzone = !bigEndzone
+	
+	# Criar um círculo
 	var circle = TextureRect.new()
 	circle.texture = circle_texture
 	circle.rect_size = Vector2(10,10)  # Tamanho do círculo
