@@ -10,36 +10,39 @@ export var ROLL_COOLDOWN = 0.5
 export var ATACK_COOLDOWN = 0.25
 export var EARLY_INPUT_TOLERANCE = 0.25
 export var LATE_INPUT_TOLERANCE = 0.25
+export var BUFFER_TIME = 0.25
 export var PERFECT_EARLY_INPUT_TOLERANCE = 0.1
 export var PERFECT_LATE_INPUT_TOLERANCE = 0.1
+export var DASH_LIMIT = 3
 
 enum {
 	MOVE,
 	ROLL,
-	ATACK
+	ATACK,
+	DASH_ATACK
 }
 
 var state = MOVE
 var velocity = Vector2.ZERO
 var roll_vector = Vector2.DOWN
 var stats = PlayerStats
-var wannaAttack = false
-var wannaRoll = false
 var last_input
 var last_beat_time
 var dash_counter = 0
 var attack_counter = 0
+var action_taken = false
+var attack_vector = Vector2.ZERO 
 
 onready var animationPlayer = $AnimationPlayer
-onready var conductor = $Conductor
 onready var animationTree = $AnimationTree
 onready var SwordHitbox = $HitboxPivot/Sword_Hitbox
 onready var hurtbox = $Hurtbox
-#onready var conductor = $Conductor
 onready var animationState = animationTree.get("parameters/playback")
 onready var blinckAnimationPlayer = $BlinkAnimationPlayer
 onready var rollTimer = $RollTimer
 onready var atackTimer = $AtackTimer
+onready var metronomePlayer = $MetronomeSound
+
 
 func _ready():
 	randomize()
@@ -47,10 +50,7 @@ func _ready():
 	animationTree.active = true
 	SwordHitbox.Knockback_vector = roll_vector
 	last_beat_time = OS.get_ticks_msec() / 1000.0
-	
-func check_conductor(conductor):
-	print(conductor)
-	
+
 func _physics_process(delta):
 	match state:
 		MOVE:
@@ -61,6 +61,9 @@ func _physics_process(delta):
 		
 		ATACK:
 			atack_state(delta)
+		
+		DASH_ATACK:
+			dash_attack_state(delta)
 
 func move_state(delta):
 	var input_vector = Vector2.ZERO
@@ -68,12 +71,19 @@ func move_state(delta):
 	input_vector.y = Input.get_action_strength("Down") - Input.get_action_strength("Up")
 	input_vector = input_vector.normalized()
 	
+	# Calculate vector from player to mouse
+	var mouse_position = get_global_mouse_position()
+	var player_position = global_position
+	attack_vector = (mouse_position - player_position).normalized()
+	$HitboxPivot.rotation = attack_vector.angle()
+	
+	animationTree.set("parameters/Atack/blend_position", attack_vector)
+	
 	if input_vector != Vector2.ZERO:
 		roll_vector = input_vector
-		SwordHitbox.Knockback_vector = roll_vector
+		SwordHitbox.Knockback_vector = attack_vector
 		animationTree.set("parameters/Idle/blend_position", input_vector)
 		animationTree.set("parameters/Run/blend_position", input_vector)
-		animationTree.set("parameters/Atack/blend_position", input_vector)
 		animationTree.set("parameters/Roll/blend_position", input_vector)
 		animationState.travel("Run")
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACELL * delta)
@@ -83,16 +93,35 @@ func move_state(delta):
 	
 	velocity = move_and_slide(velocity)
 	
-	var current_time = OS.get_ticks_msec() / 1000.0 
-	
-	if Input.is_action_just_pressed("Atack"):
-		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE:
+	var current_time = OS.get_ticks_msec() / 1000.0
+	if Input.is_action_just_pressed("dash_attack") and atackTimer.is_stopped() and rollTimer.is_stopped() and attack_counter < DASH_LIMIT and dash_counter < DASH_LIMIT:
+		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
+			state = DASH_ATACK
+			action_taken = true
+			attack_counter += 1
+			dash_counter += 1
+			if attack_counter >= DASH_LIMIT:
+				rollTimer.start(ATACK_COOLDOWN)
+			if dash_counter >= DASH_LIMIT:
+				rollTimer.start(ROLL_COOLDOWN)
+		else:
+			last_input = "Dash Attack"
+	if Input.is_action_just_pressed("Atack") and atackTimer.is_stopped() and attack_counter < DASH_LIMIT:
+		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			state = ATACK
+			action_taken = true
+			attack_counter += 1
+			if attack_counter >= DASH_LIMIT:
+				rollTimer.start(ATACK_COOLDOWN)
 		else:
 			last_input = "Atack"
-	if Input.is_action_just_pressed("Roll"):
-		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE:
+	if Input.is_action_just_pressed("Roll") and rollTimer.is_stopped() and dash_counter < DASH_LIMIT:
+		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			state = ROLL
+			action_taken = true
+			dash_counter += 1
+			if dash_counter >= DASH_LIMIT:
+				rollTimer.start(ROLL_COOLDOWN)
 		else:
 			last_input = "Roll"
 
@@ -102,16 +131,24 @@ func roll_state(_delta):
 	velocity = move_and_slide(velocity)
 
 func atack_state(_delta):
-	velocity = Vector2.ZERO
 	animationState.travel("Atack")
+	
+	velocity = attack_vector * 75
+	move_and_slide(velocity)
+
+func dash_attack_state(_delta):
+	animationState.travel("Atack")
+	
+	velocity = attack_vector * 250
+	move_and_slide(velocity)
 
 func roll_animation_finished():
-	rollTimer.start(ROLL_COOLDOWN)
+	# rollTimer.start(ROLL_COOLDOWN)
 	state = MOVE
 	velocity = MAX_SPEED * velocity.normalized()
 
 func atack_animation_finished():
-	atackTimer.start(ATACK_COOLDOWN)
+	# atackTimer.start(ATACK_COOLDOWN)
 	state = MOVE
 
 func _on_Hurtbox_area_entered(area):
@@ -133,8 +170,47 @@ func _on_Hurtbox_invincibility_ended():
 
 func _on_Conductor_quarter_passed(beat):
 	last_beat_time = OS.get_ticks_msec() / 1000.0
-	if last_input == "Atack":
+	metronomePlayer.play()
+	var action_taken_previous_beat = action_taken
+	action_taken = false
+	if last_input == "Dash Attack" and atackTimer.is_stopped() and rollTimer.is_stopped():
+		state = DASH_ATACK
+		action_taken = true
+		attack_counter += 1
+		dash_counter += 1
+		if attack_counter >= DASH_LIMIT and atackTimer.is_stopped():
+			atackTimer.start(ATACK_COOLDOWN)
+		if dash_counter >= DASH_LIMIT and rollTimer.is_stopped():
+			rollTimer.start(ROLL_COOLDOWN)
+	if last_input == "Atack" and atackTimer.is_stopped():
 		state = ATACK
-	if last_input == "Roll":
+		action_taken = true
+		attack_counter += 1
+		if attack_counter >= DASH_LIMIT and atackTimer.is_stopped():
+			atackTimer.start(ATACK_COOLDOWN)
+	else:
+		if not action_taken_previous_beat and attack_counter and atackTimer.is_stopped():
+			atackTimer.start(ATACK_COOLDOWN)
+	if last_input == "Roll" and rollTimer.is_stopped():
 		state = ROLL
+		action_taken = true
+		dash_counter += 1
+		if dash_counter >= DASH_LIMIT and rollTimer.is_stopped():
+			rollTimer.start(ROLL_COOLDOWN)
+	else:
+		if not action_taken_previous_beat and dash_counter and rollTimer.is_stopped():
+			rollTimer.start(ROLL_COOLDOWN)
+	
 	last_input = null
+
+
+func _on_Conductor_quarter_will_pass(beat):
+	metronomePlayer.play()
+
+
+func _on_RollTimer_timeout():
+	dash_counter = 0
+
+
+func _on_AtackTimer_timeout():
+	attack_counter = 0
