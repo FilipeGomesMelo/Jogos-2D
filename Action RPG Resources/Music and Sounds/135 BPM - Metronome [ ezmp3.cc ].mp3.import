@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/135 BPM - Metronome [ ezmp3.cc ].mp3-420ac7e7b2212ea5d8b325d704d6a51a.mp3str"
+
+[deps]
+
+source_file="res://Action RPG Resources/Music and Sounds/135 BPM - Metronome [ ezmp3.cc ].mp3"
+dest_files=[ "res://.import/135 BPM - Metronome [ ezmp3.cc ].mp3-420ac7e7b2212ea5d8b325d704d6a51a.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

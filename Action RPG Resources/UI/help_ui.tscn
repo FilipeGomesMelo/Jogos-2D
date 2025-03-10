@@ -1,20 +1,27 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Action RPG Resources/UI/help_ui.gd" type="Script" id=1]
 [ext_resource path="res://Action RPG Resources/UI/HeartUIFull.png" type="Texture" id=2]
 [ext_resource path="res://Action RPG Resources/UI/HeartUIEmpty.png" type="Texture" id=3]
+[ext_resource path="res://Action RPG Resources/Player/Conductor.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Action RPG Resources/UI/Bara_unica_verde.png" type="Texture" id=5]
+[ext_resource path="res://Action RPG Resources/UI/Bara_unica_preta.png" type="Texture" id=6]
 
 [node name="help_ui" type="Control"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 0.319077
+margin_top = 0.0404205
+margin_right = 320.319
+margin_bottom = 27.0404
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HeartUIEmpty" type="TextureRect" parent="."]
-margin_right = 59.0
-margin_bottom = 11.0
+margin_left = 2.0
+margin_top = 8.0
+margin_right = 61.0
+margin_bottom = 19.0
 texture = ExtResource( 3 )
 stretch_mode = 2
 __meta__ = {
@@ -22,8 +29,10 @@ __meta__ = {
 }
 
 [node name="HeartUIFull" type="TextureRect" parent="."]
-margin_right = 59.0
-margin_bottom = 11.0
+margin_left = 2.0
+margin_top = 8.0
+margin_right = 61.0
+margin_bottom = 19.0
 size_flags_horizontal = 2
 size_flags_vertical = 0
 texture = ExtResource( 2 )
@@ -32,3 +41,38 @@ stretch_mode = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Conductor" parent="." instance=ExtResource( 4 )]
+
+[node name="one_bar" type="TextureRect" parent="."]
+margin_left = 285.0
+margin_top = 5.0
+margin_right = 665.0
+margin_bottom = 370.0
+rect_scale = Vector2( 0.07, 0.056 )
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="four_bars" type="TextureRect" parent="."]
+margin_left = 285.0
+margin_top = 5.0
+margin_right = 665.0
+margin_bottom = 370.0
+rect_scale = Vector2( 0.07, 0.056 )
+size_flags_horizontal = 2
+size_flags_vertical = 2
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="eighth_passed" from="Conductor" to="." method="_on_Conductor_eighth_passed"]
+[connection signal="quarter_passed" from="Conductor" to="." method="_on_Conductor_quarter_passed"]
+[connection signal="sixteenth_passed" from="Conductor" to="." method="_on_Conductor_sixteenth_passed"]
+[connection signal="twelth_passed" from="Conductor" to="." method="_on_Conductor_twelth_passed"]
