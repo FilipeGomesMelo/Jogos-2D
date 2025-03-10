@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Endless Horizons.mp3-73f1346fc59545430b4069bc12d280aa.mp3str"
+
+[deps]
+
+source_file="res://Action RPG Resources/Music and Sounds/Endless Horizons.mp3"
+dest_files=[ "res://.import/Endless Horizons.mp3-73f1346fc59545430b4069bc12d280aa.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -41,15 +41,14 @@ onready var animationState = animationTree.get("parameters/playback")
 onready var blinckAnimationPlayer = $BlinkAnimationPlayer
 onready var rollTimer = $RollTimer
 onready var atackTimer = $AtackTimer
-onready var conductor = $Conductor
 onready var metronomePlayer = $MetronomeSound
+
 
 func _ready():
 	randomize()
 	stats.connect("no_health", self, "queue_free")
 	animationTree.active = true
 	SwordHitbox.Knockback_vector = roll_vector
-	conductor.play()
 	last_beat_time = OS.get_ticks_msec() / 1000.0
 
 func _physics_process(delta):
