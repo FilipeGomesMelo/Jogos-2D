@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/125 BPM.mp3-5f18d3770aed84ba2cc4166c4f510224.mp3str"
+
+[deps]
+
+source_file="res://Action RPG Resources/Music and Sounds/125 BPM.mp3"
+dest_files=[ "res://.import/125 BPM.mp3-5f18d3770aed84ba2cc4166c4f510224.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

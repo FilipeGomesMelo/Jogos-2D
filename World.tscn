@@ -9,7 +9,7 @@
 [ext_resource path="res://Action RPG Resources/Enemies/Bat.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Action RPG Resources/UI/help_ui.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Action RPG Resources/World/Tree.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Action RPG Resources/Music and Sounds/Music.mp3" type="AudioStream" id=10]
+[ext_resource path="res://Action RPG Resources/Music and Sounds/Endless Horizons.mp3" type="AudioStream" id=10]
 [ext_resource path="res://Action RPG Resources/UI/Camera2D.tscn" type="PackedScene" id=11]
 [ext_resource path="res://World.gd" type="Script" id=12]
 [ext_resource path="res://Action RPG Resources/Enemies/MonsterSpawner.tscn" type="PackedScene" id=13]
@@ -431,6 +431,7 @@ position = Vector2( -80, 144 )
 
 [node name="Player" parent="YSort" instance=ExtResource( 1 )]
 position = Vector2( 152, 80 )
+ATACK_COOLDOWN = 0.25
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/Player"]
 remote_path = NodePath("../../../Camera2D")
@@ -441,6 +442,7 @@ remote_path = NodePath("../../../Camera2D")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 10 )
+volume_db = 8.981
 autoplay = true
 
 [editable path="Camera2D"]
