@@ -6,14 +6,15 @@ export var circle_texture: Texture  # Defina a textura do círculo no editor
 
 onready var beats_container = $BeatsContainer
 onready var endzone = $Endzone
-onready var conductor = $Conductor
+
 var bigEndzone = false
 
 func _ready():
-	pass
+	if Conductor:
+		Conductor.connect("quarter_passed", self, "_on_Conductor_quarter_passed")
 	
 func _on_Conductor_quarter_passed(beat):
-	
+
 	endzone.rect_scale =  Vector2(1, 1) if bigEndzone else Vector2(1.1, 1.1)
 	bigEndzone = !bigEndzone
 	

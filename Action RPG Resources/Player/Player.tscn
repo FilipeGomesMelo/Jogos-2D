@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=2]
+[gd_scene load_steps=61 format=2]
 
 [ext_resource path="res://Action RPG Resources/Player/Player.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
@@ -9,7 +9,6 @@
 [ext_resource path="res://Action RPG Resources/Music and Sounds/Swipe.wav" type="AudioStream" id=7]
 [ext_resource path="res://Action RPG Resources/Music and Sounds/Evade.wav" type="AudioStream" id=8]
 [ext_resource path="res://Action RPG Resources/white_color_shader.gdshader" type="Shader" id=9]
-[ext_resource path="res://Action RPG Resources/Player/Conductor.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Action RPG Resources/Music and Sounds/metronome.mp3" type="AudioStream" id=11]
 
 [sub_resource type="ShaderMaterial" id=1]
@@ -814,8 +813,6 @@ anims/Stop = SubResource( 50 )
 [node name="RollTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="Conductor" parent="." instance=ExtResource( 10 )]
-
 [node name="AtackTimer" type="Timer" parent="."]
 wait_time = 0.15
 one_shot = true
@@ -827,11 +824,6 @@ stream = ExtResource( 11 )
 [connection signal="invincibility_ended" from="Hurtbox" to="." method="_on_Hurtbox_invincibility_ended"]
 [connection signal="invincibility_started" from="Hurtbox" to="." method="_on_Hurtbox_invincibility_started"]
 [connection signal="timeout" from="RollTimer" to="." method="_on_RollTimer_timeout"]
-[connection signal="eighth_passed" from="Conductor" to="." method="_on_Conductor_eighth_passed"]
-[connection signal="quarter_passed" from="Conductor" to="." method="_on_Conductor_quarter_passed"]
-[connection signal="quarter_will_pass" from="Conductor" to="." method="_on_Conductor_quarter_will_pass"]
-[connection signal="sixteenth_passed" from="Conductor" to="." method="_on_Conductor_sixteenth_passed"]
-[connection signal="twelth_passed" from="Conductor" to="." method="_on_Conductor_twelth_passed"]
 [connection signal="timeout" from="AtackTimer" to="." method="_on_AtackTimer_timeout"]
 
 [editable path="HitboxPivot/Sword_Hitbox"]

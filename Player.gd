@@ -50,6 +50,9 @@ func _ready():
 	animationTree.active = true
 	SwordHitbox.Knockback_vector = roll_vector
 	last_beat_time = OS.get_ticks_msec() / 1000.0
+	if Conductor:
+		Conductor.connect("quarter_passed", self, "_on_Conductor_quarter_passed")
+		Conductor.connect("quarter_will_pass", self, "_on_Conductor_quarter_will_pass")
 
 func _physics_process(delta):
 	match state:
