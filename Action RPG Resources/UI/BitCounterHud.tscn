@@ -12,10 +12,11 @@ __meta__ = {
 circle_texture = ExtResource( 4 )
 
 [node name="Endzone" type="TextureRect" parent="."]
-margin_left = 290.75
-margin_top = -2.75
-margin_right = 322.75
-margin_bottom = 29.25
+anchor_right = 1.0
+margin_left = 144.0
+margin_top = 148.756
+margin_right = 176.0
+margin_bottom = 180.756
 texture = ExtResource( 2 )
 expand = true
 __meta__ = {
@@ -23,4 +24,3 @@ __meta__ = {
 }
 
 [node name="BeatsContainer" type="Node2D" parent="."]
-position = Vector2( 62.7855, -1.57598 )
