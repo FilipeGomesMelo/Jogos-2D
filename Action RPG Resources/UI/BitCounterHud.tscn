@@ -12,7 +12,6 @@ __meta__ = {
 circle_texture = ExtResource( 4 )
 
 [node name="Endzone" type="TextureRect" parent="."]
-anchor_right = 1.0
 margin_left = 144.0
 margin_top = 148.756
 margin_right = 176.0
