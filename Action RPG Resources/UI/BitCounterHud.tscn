@@ -1,11 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Action RPG Resources/UI/BitCounterHud.gd" type="Script" id=1]
 [ext_resource path="res://Action RPG Resources/UI/Music_10.png" type="Texture" id=2]
-[ext_resource path="res://Action RPG Resources/Player/Conductor.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Action RPG Resources/UI/Music_11.png" type="Texture" id=4]
 
-[node name="Node2D" type="Control"]
+[node name="BitCounter" type="Control"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -13,10 +12,10 @@ __meta__ = {
 circle_texture = ExtResource( 4 )
 
 [node name="Endzone" type="TextureRect" parent="."]
-margin_left = 290.75
-margin_top = -2.75
-margin_right = 322.75
-margin_bottom = 29.25
+margin_left = 144.0
+margin_top = 148.756
+margin_right = 176.0
+margin_bottom = 180.756
 texture = ExtResource( 2 )
 expand = true
 __meta__ = {
@@ -24,9 +23,3 @@ __meta__ = {
 }
 
 [node name="BeatsContainer" type="Node2D" parent="."]
-position = Vector2( 62.7855, -1.57598 )
-
-[node name="Conductor" parent="." instance=ExtResource( 3 )]
-position = Vector2( -1.52588e-05, -7.62939e-06 )
-
-[connection signal="quarter_passed" from="Conductor" to="." method="_on_Conductor_quarter_passed"]
