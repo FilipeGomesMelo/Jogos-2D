@@ -42,6 +42,7 @@ onready var blinckAnimationPlayer = $BlinkAnimationPlayer
 onready var rollTimer = $RollTimer
 onready var atackTimer = $AtackTimer
 onready var metronomePlayer = $MetronomeSound
+onready var rollIndicator = $Sprite/RollIndicator
 
 
 func _ready():
@@ -106,7 +107,7 @@ func move_state(delta):
 			if attack_counter >= DASH_LIMIT:
 				rollTimer.start(ATACK_COOLDOWN)
 			if dash_counter >= DASH_LIMIT:
-				rollTimer.start(ROLL_COOLDOWN)
+				rool_cooldown_indicator()
 		else:
 			last_input = "Dash Attack"
 	if Input.is_action_just_pressed("Atack") and atackTimer.is_stopped() and attack_counter < DASH_LIMIT:
@@ -124,7 +125,7 @@ func move_state(delta):
 			action_taken = true
 			dash_counter += 1
 			if dash_counter >= DASH_LIMIT:
-				rollTimer.start(ROLL_COOLDOWN)
+				rool_cooldown_indicator()
 		else:
 			last_input = "Roll"
 
@@ -184,7 +185,7 @@ func _on_Conductor_quarter_passed(beat):
 		if attack_counter >= DASH_LIMIT and atackTimer.is_stopped():
 			atackTimer.start(ATACK_COOLDOWN)
 		if dash_counter >= DASH_LIMIT and rollTimer.is_stopped():
-			rollTimer.start(ROLL_COOLDOWN)
+			rool_cooldown_indicator()
 	if last_input == "Atack" and atackTimer.is_stopped():
 		state = ATACK
 		action_taken = true
@@ -199,10 +200,10 @@ func _on_Conductor_quarter_passed(beat):
 		action_taken = true
 		dash_counter += 1
 		if dash_counter >= DASH_LIMIT and rollTimer.is_stopped():
-			rollTimer.start(ROLL_COOLDOWN)
+			rool_cooldown_indicator()
 	else:
 		if not action_taken_previous_beat and dash_counter and rollTimer.is_stopped():
-			rollTimer.start(ROLL_COOLDOWN)
+			rool_cooldown_indicator()
 	
 	last_input = null
 
@@ -218,3 +219,16 @@ func _on_RollTimer_timeout():
 
 func _on_AtackTimer_timeout():
 	attack_counter = 0
+	
+func rool_cooldown_indicator():
+	rollIndicator.visible = true
+	rollTimer.start(ROLL_COOLDOWN)
+	var tween = Tween.new()
+	add_child(tween)
+	print(rollIndicator)
+	tween.interpolate_property(rollIndicator, "scale", Vector2(0.04, 0.025), Vector2(0.06, 0.035), 0.5)
+	tween.start()
+	
+	yield(get_tree().create_timer(ROLL_COOLDOWN), "timeout")
+	
+	rollIndicator.visible = false
