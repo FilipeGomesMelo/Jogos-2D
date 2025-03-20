@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=2]
+[gd_scene load_steps=62 format=2]
 
 [ext_resource path="res://Action RPG Resources/Player/Player.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Action RPG Resources/Music and Sounds/Swipe.wav" type="AudioStream" id=7]
 [ext_resource path="res://Action RPG Resources/Music and Sounds/Evade.wav" type="AudioStream" id=8]
 [ext_resource path="res://Action RPG Resources/white_color_shader.gdshader" type="Shader" id=9]
+[ext_resource path="res://Action RPG Resources/UI/RollIndicator.png" type="Texture" id=10]
 [ext_resource path="res://Action RPG Resources/Music and Sounds/metronome.mp3" type="AudioStream" id=11]
 
 [sub_resource type="ShaderMaterial" id=1]
@@ -686,7 +687,7 @@ states/Run/node = SubResource( 38 )
 states/Run/position = Vector2( 664.334, 88.2346 )
 transitions = [ "Idle", "Run", SubResource( 39 ), "Run", "Idle", SubResource( 40 ), "Idle", "Atack", SubResource( 41 ), "Atack", "Idle", SubResource( 42 ), "Idle", "Roll", SubResource( 43 ), "Roll", "Idle", SubResource( 44 ) ]
 start_node = "Idle"
-graph_offset = Vector2( -23.4778, -15.5931 )
+graph_offset = Vector2( -60.4778, -138.593 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=46]
 
@@ -751,6 +752,13 @@ position = Vector2( 0, -9 )
 texture = ExtResource( 1 )
 hframes = 60
 frame = 18
+
+[node name="RollIndicator" type="Sprite" parent="Sprite"]
+visible = false
+position = Vector2( 10.6432, -17.8396 )
+scale = Vector2( 0.0403878, 0.0249268 )
+z_index = 4096
+texture = ExtResource( 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
