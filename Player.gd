@@ -173,7 +173,7 @@ func _on_Hurtbox_invincibility_ended():
 
 func _on_Conductor_quarter_passed(beat):
 	last_beat_time = OS.get_ticks_msec() / 1000.0
-	metronomePlayer.play()
+	#metronomePlayer.play()
 	var action_taken_previous_beat = action_taken
 	action_taken = false
 	if last_input == "Dash Attack" and atackTimer.is_stopped() and rollTimer.is_stopped():
@@ -208,7 +208,8 @@ func _on_Conductor_quarter_passed(beat):
 
 
 func _on_Conductor_quarter_will_pass(beat):
-	metronomePlayer.play()
+	#metronomePlayer.play()
+	pass
 
 
 func _on_RollTimer_timeout():
