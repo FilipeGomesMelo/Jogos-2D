@@ -29,7 +29,7 @@ limit_bottom = 10000000
 smoothing_speed = 10.0
 
 [node name="TopLeft" parent="Camera2D/Limits" index="0"]
-position = Vector2( -314.343, -200.976 )
+position = Vector2( -312.447, -229.357 )
 
 [node name="BottomRight" parent="Camera2D/Limits" index="1"]
 position = Vector2( 668.032, 388.343 )

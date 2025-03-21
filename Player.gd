@@ -43,6 +43,7 @@ onready var rollTimer = $RollTimer
 onready var atackTimer = $AtackTimer
 onready var metronomePlayer = $MetronomeSound
 onready var rollIndicator = $Sprite/RollIndicator
+onready var player = $Sprite
 
 
 func _ready():
@@ -67,7 +68,7 @@ func _physics_process(delta):
 			atack_state(delta)
 		
 		DASH_ATACK:
-			dash_attack_state(delta)
+			dash_atack_state(delta)
 
 func move_state(delta):
 	var input_vector = Vector2.ZERO
@@ -109,7 +110,7 @@ func move_state(delta):
 			if dash_counter >= DASH_LIMIT:
 				rool_cooldown_indicator()
 		else:
-			last_input = "Dash Attack"
+			last_input = "DashAtack"
 	if Input.is_action_just_pressed("Atack") and atackTimer.is_stopped() and attack_counter < DASH_LIMIT:
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			state = ATACK
@@ -140,8 +141,8 @@ func atack_state(_delta):
 	velocity = attack_vector * 75
 	move_and_slide(velocity)
 
-func dash_attack_state(_delta):
-	animationState.travel("Atack")
+func dash_atack_state(_delta):
+	animationState.travel("DashAtack")
 	
 	velocity = attack_vector * 250
 	move_and_slide(velocity)
@@ -154,6 +155,9 @@ func roll_animation_finished():
 func atack_animation_finished():
 	# atackTimer.start(ATACK_COOLDOWN)
 	state = MOVE
+	
+func invisible_dash():
+	player.visible = !player.visible
 
 func _on_Hurtbox_area_entered(area):
 	if !hurtbox.invincible:
@@ -177,7 +181,7 @@ func _on_Conductor_quarter_passed(beat):
 	#metronomePlayer.play()
 	var action_taken_previous_beat = action_taken
 	action_taken = false
-	if last_input == "Dash Attack" and atackTimer.is_stopped() and rollTimer.is_stopped():
+	if last_input == "DashAtack" and atackTimer.is_stopped() and rollTimer.is_stopped():
 		state = DASH_ATACK
 		action_taken = true
 		attack_counter += 1
