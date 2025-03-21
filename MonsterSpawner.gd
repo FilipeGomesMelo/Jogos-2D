@@ -20,15 +20,12 @@ func spawn_enemy():
 	enemy.connect("tree_exited", self, "_on_enemy_died", [enemy])
 
 func _on_Timer_timeout():
-	print("timeout timer")
-	print(enemies.size())
 	if enemies.size() < max_enemies:
 		spawn_enemy()
 		
 func _on_enemy_died(enemy):
 	if enemy in enemies:
 		enemies.erase(enemy)  # Remove o inimigo da lista
-		print("Inimigo removido da lista. Total restante:", enemies.size())	
 		
 func generate_random_vector() -> Vector2:
 	var random_vector := Vector2(rand_range(-1, 1), rand_range(-1, 1))

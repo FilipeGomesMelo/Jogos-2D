@@ -50,6 +50,7 @@ func _ready():
 	animationTree.active = true
 	SwordHitbox.Knockback_vector = roll_vector
 	last_beat_time = OS.get_ticks_msec() / 1000.0
+	print(Conductor)
 	if Conductor:
 		Conductor.connect("quarter_passed", self, "_on_Conductor_quarter_passed")
 		Conductor.connect("quarter_will_pass", self, "_on_Conductor_quarter_will_pass")
@@ -104,7 +105,7 @@ func move_state(delta):
 			attack_counter += 1
 			dash_counter += 1
 			if attack_counter >= DASH_LIMIT:
-				rollTimer.start(ATACK_COOLDOWN)
+				atackTimer.start(ATACK_COOLDOWN)
 			if dash_counter >= DASH_LIMIT:
 				rollTimer.start(ROLL_COOLDOWN)
 		else:
@@ -115,7 +116,7 @@ func move_state(delta):
 			action_taken = true
 			attack_counter += 1
 			if attack_counter >= DASH_LIMIT:
-				rollTimer.start(ATACK_COOLDOWN)
+				atackTimer.start(ATACK_COOLDOWN)
 		else:
 			last_input = "Atack"
 	if Input.is_action_just_pressed("Roll") and rollTimer.is_stopped() and dash_counter < DASH_LIMIT:
@@ -155,6 +156,7 @@ func atack_animation_finished():
 	state = MOVE
 
 func _on_Hurtbox_area_entered(area):
+	print('entered')
 	if !hurtbox.invincible:
 		stats.health -= area.damage
 		hurtbox.start_invincibility(0.75)

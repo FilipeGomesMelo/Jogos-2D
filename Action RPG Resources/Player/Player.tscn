@@ -329,7 +329,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.05, 0.2 ),
+"times": PoolRealArray( 0, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [  ],
@@ -376,7 +376,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.05, 0.2 ),
+"times": PoolRealArray( 0, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [  ],
@@ -423,7 +423,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.05, 0.2 ),
+"times": PoolRealArray( 0, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [  ],
@@ -470,7 +470,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.05, 0.2 ),
+"times": PoolRealArray( 0, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [  ],
@@ -691,7 +691,8 @@ graph_offset = Vector2( -23.4778, -15.5931 )
 [sub_resource type="AnimationNodeStateMachinePlayback" id=46]
 
 [sub_resource type="CapsuleShape2D" id=47]
-height = 12.0
+radius = 15.0
+height = 15.0
 
 [sub_resource type="CapsuleShape2D" id=48]
 radius = 6.0
@@ -811,10 +812,11 @@ anims/Start = SubResource( 49 )
 anims/Stop = SubResource( 50 )
 
 [node name="RollTimer" type="Timer" parent="."]
+wait_time = 0.25
 one_shot = true
 
 [node name="AtackTimer" type="Timer" parent="."]
-wait_time = 0.15
+wait_time = 0.25
 one_shot = true
 
 [node name="MetronomeSound" type="AudioStreamPlayer" parent="."]
