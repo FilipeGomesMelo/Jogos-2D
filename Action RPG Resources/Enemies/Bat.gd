@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 const EnemyDeathEffect = preload("res://Action RPG Resources/Effects/EnemyDeathEffect.tscn")
+const HEART_SCENE = preload("res://Action RPG Resources/UI/Heart.tscn")
 
 export var ACELLERATION = 300
 export var MAX_SPEED = 50
@@ -22,10 +23,11 @@ onready var softCollision = $SoftCollision
 onready var wanderController = $WanderController
 onready var animationPlayer = $AnimationPlayer
 onready var healthBar = $TextureProgress
+onready var player = get_tree().get_nodes_in_group("player")[0]
 
 var state = IDLE
 var velocity = Vector2.ZERO
-
+		
 func _physics_process(delta):
 	match state:
 		IDLE:
@@ -78,6 +80,21 @@ func seek_player():
 	if PlayerDetection.can_see_player():
 		state = CHASE
 
+func spawn_heart():
+	var heart = HEART_SCENE.instance()
+	heart.global_position = global_position
+	
+	var direction = (global_position - player.position).normalized()
+	
+	var final_position = global_position + (direction * 50)
+
+	get_parent().add_child(heart)
+	
+	var tween = Tween.new()
+	heart.add_child(tween)
+	tween.interpolate_property(heart, "global_position", heart.global_position, final_position, 1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	tween.start()
+
 func update_wander():
 	state = pick_random_state([IDLE, WANDER])
 	wanderController.start_wander_timer(rand_range(1, 3))
@@ -94,6 +111,8 @@ func _on_Hurtbox_area_entered(area):
 	hurtbox.start_invincibility(0.4)
 	
 func _on_Stats_no_health():
+	if randf() > 0.8:
+		spawn_heart()
 	queue_free()
 	var enemyDeathEffect = EnemyDeathEffect.instance()
 	get_parent().add_child(enemyDeathEffect)

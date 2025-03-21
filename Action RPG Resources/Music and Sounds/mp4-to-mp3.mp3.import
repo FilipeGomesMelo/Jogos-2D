@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/mp4-to-mp3.mp3-dad40eb150ad3ca026142d1a1a16fd4f.mp3str"
+
+[deps]
+
+source_file="res://Action RPG Resources/Music and Sounds/mp4-to-mp3.mp3"
+dest_files=[ "res://.import/mp4-to-mp3.mp3-dad40eb150ad3ca026142d1a1a16fd4f.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

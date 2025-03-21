@@ -38,23 +38,20 @@ func _on_Conductor_quarter_passed(beat):
 
 	# Criar um Tween para animar o círculo até o coração
 	var tween = Tween.new()
-	var tween2 = Tween.new()	
 	add_child(tween)
-	add_child(tween2)
-	
+
 	tween.interpolate_property(circle, "rect_position", circle.rect_position, endzone.rect_position, CIRCLE_SPEED, Tween.TRANS_SINE, Tween.TRANS_LINEAR)
-	tween2.interpolate_property(circle2, "rect_position", circle2.rect_position, endzone.rect_position, CIRCLE_SPEED, Tween.TRANS_SINE, Tween.TRANS_LINEAR)	
+	tween.interpolate_property(circle2, "rect_position", circle2.rect_position, endzone.rect_position, CIRCLE_SPEED, Tween.TRANS_SINE, Tween.TRANS_LINEAR)	
 	# Conectar diretamente o sinal de finalização da animação
-	tween.connect("tween_all_completed", self, "_on_tween_complete", [circle, tween])
-	tween2.connect("tween_all_completed", self, "_on_tween_complete", [circle2, tween2])
+	tween.connect("tween_all_completed", self, "_on_tween_complete", [circle, circle2, tween])
 	
 	tween.start()
-	tween2.start()
-	
 
-func _on_tween_complete(object, tween):
+func _on_tween_complete(object, object2, tween):
 	# Remover o círculo e o Tween da árvore
 	if object:
 		object.queue_free()
+	if object2:
+		object2.queue_free()
 	if tween:
 		tween.queue_free()
