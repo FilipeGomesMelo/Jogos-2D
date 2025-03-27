@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 const EnemyDeathEffect = preload("res://Action RPG Resources/Effects/EnemyDeathEffect.tscn")
+const HEART_SCENE = preload("res://Action RPG Resources/UI/Heart.tscn")
 
 enum {
 	IDLE,
@@ -17,10 +18,10 @@ export var SLOWING_RADIUS = 10
 export var STAR_ATTACK_CHANCE = 0.5
 export var ATTACK_CHANCE_INCREASE = 0.25
 export(String, "MELEE", "RANGED") var TYPE = "MELEE"
-export var MELEE_ATTACK_COOLDOWN = 2
-export var MELEE_ATTACK_DURATION = 1
-export var RANGED_ATTACK_COOLDOWN = 2
-export var RANGED_ATTACK_DURATION = 1
+export var MELEE_ATTACK_COOLDOWN = 2.0
+export var MELEE_ATTACK_DURATION = 1.0
+export var RANGED_ATTACK_COOLDOWN = 2.0
+export var RANGED_ATTACK_DURATION = 1.0
 export var MELEE_SPEED_BOOST = 0.5
 
 
@@ -45,6 +46,9 @@ var state = IDLE
 var velocity = Vector2.ZERO
 var attack_chance = STAR_ATTACK_CHANCE
 var hitbox = null
+
+func update_type(type: String = 'MELEE'):
+	TYPE = type
 
 func _ready():
 	if Conductor:
@@ -123,6 +127,23 @@ func seek_player():
 	if PlayerDetection.can_see_player():
 		state = CHASE
 
+func spawn_heart():
+	var heart = HEART_SCENE.instance()
+	heart.global_position = global_position
+	var player = PlayerFollowRange.player
+	if player == null:
+		return
+	var direction = (global_position - player.position).normalized()
+	
+	var final_position = global_position + (direction * 50)
+
+	get_parent().add_child(heart)
+	
+	var tween = Tween.new()
+	heart.add_child(tween)
+	tween.interpolate_property(heart, "global_position", heart.global_position, final_position, 1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	tween.start()
+
 func update_wander():
 	state = pick_random_state([IDLE, WANDER])
 	wanderController.start_wander_timer(rand_range(1, 3))
@@ -132,13 +153,21 @@ func pick_random_state(state_list):
 	return state_list.pop_front()
 
 func _on_Hurtbox_area_entered(area):
+	attackCooldownTimer.start()
+	hitbox.disable()
+	if PlayerFollowRange.player:
+		state = CHASE
+	else:
+		state = IDLE
 	hurtbox.create_hit_effect()
 	velocity = area.Knockback_vector * 100
 	Stats.health -= area.damage
 	healthBar.change_progress((Stats.health/Stats.max_health)*100)
 	hurtbox.start_invincibility(0.4)
-	
+
 func _on_Stats_no_health():
+	if randf() > 0.8:
+		spawn_heart()
 	queue_free()
 	var enemyDeathEffect = EnemyDeathEffect.instance()
 	get_parent().add_child(enemyDeathEffect)

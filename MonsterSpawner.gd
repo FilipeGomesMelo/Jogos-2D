@@ -1,18 +1,31 @@
 extends Node2D
 
 export (PackedScene) var enemy_scene
-export var spawn_time = 3.0  # Tempo entre cada spawn
-export var max_enemies = 5   # Número máximo de inimigos ativos
-export var spawn_radius = 5.0 # Raio do Spawn
+export var spawn_time = 10.0  # Tempo entre cada spawn
+export var max_enemies = 2   # Número máximo de inimigos ativos
+export var spawn_radius = 8.0 # Raio do Spawn
 
 var enemies = []  # Lista para armazenar inimigos vivos
 
-var active_enemies: int = 0  # Contador de inimigos ativos
+var timer  # Referência ao Timer
 
-# Called when the node enters the scene tree for the first time.
-func spawn_enemy():
+func _ready():
+	# Criar e configurar o Timer
+	spawn_enemy()
+	timer = Timer.new()
+	timer.wait_time = spawn_time
+	timer.one_shot = false  # Continua rodando
+	add_child(timer)
+	timer.connect("timeout", self, "_on_Timer_timeout")
+	timer.start()
 	
+
+func spawn_enemy():
+	if enemies.size() >= max_enemies:
+		return
 	var enemy = enemy_scene.instance()
+	if randf() <= 0.25:
+		enemy.update_type('RANGED')
 	enemy.position = generate_random_vector() + self.position
 	get_parent().add_child(enemy)
 	enemies.append(enemy)
@@ -22,7 +35,7 @@ func spawn_enemy():
 func _on_Timer_timeout():
 	if enemies.size() < max_enemies:
 		spawn_enemy()
-		
+
 func _on_enemy_died(enemy):
 	if enemy in enemies:
 		enemies.erase(enemy)  # Remove o inimigo da lista

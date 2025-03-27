@@ -40,10 +40,10 @@ TYPE = "RANGED"
 [node name="Bat2" parent="YSort/Bats" instance=ExtResource( 7 )]
 position = Vector2( 320.006, 55.1939 )
 ACELLERATION = 500
+MELEE_ATTACK_DURATION = 0.1
 
 [node name="Player" parent="YSort" instance=ExtResource( 1 )]
 position = Vector2( 152, 80 )
-ROLL_COOLDOWN = 0.5
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/Player"]
 remote_path = NodePath("../../../Camera2D")
