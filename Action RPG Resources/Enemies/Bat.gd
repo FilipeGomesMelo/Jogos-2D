@@ -41,11 +41,13 @@ onready var attackCooldownTimer = $AttackCooldownTimer
 onready var attackDurationTimer = $AttackDurationTimer
 onready var rangedHitboxPivot = $RangedHitboxPivot
 onready var rangedHitbox = $RangedHitboxPivot/RangedHitbox
+onready var tween = $Tween
 
 var state = IDLE
 var velocity = Vector2.ZERO
 var attack_chance = STAR_ATTACK_CHANCE
 var hitbox = null
+var attack_direction = Vector2.ZERO
 
 func update_type(type: String = 'MELEE'):
 	TYPE = type
@@ -54,6 +56,7 @@ func _ready():
 	if Conductor:
 		Conductor.connect("quarter_passed", self, "_on_Conductor_quarter_passed")
 		Conductor.connect("quarter_will_pass", self, "_on_Conductor_quarter_will_pass")
+		Conductor.connect("sixteenth_passed", self, "_on_Conductor_eight_passed")
 	if TYPE == 'MELEE':
 		hitbox = meleeHitbox
 		MAX_SPEED += MELEE_SPEED_BOOST * MAX_SPEED
@@ -66,6 +69,7 @@ func _ready():
 func _physics_process(delta):
 	match state:
 		IDLE:
+			rangedHitbox.visible = false
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 			if wanderController.get_time_left() == 0:
 				update_wander()
@@ -73,6 +77,7 @@ func _physics_process(delta):
 			seek_player()
 		
 		WANDER:
+			rangedHitbox.visible = false
 			arrival_to(wanderController.target_position, delta)
 			if wanderController.get_time_left() == 0:
 				update_wander()
@@ -83,10 +88,15 @@ func _physics_process(delta):
 			seek_player()
 		
 		CHASE:
+			rangedHitbox.visible = false
 			var player = PlayerFollowRange.player
 			if player != null:
 				navigationAgent.set_target_location(PlayerDetection.get_target_position())
-				acellerate_towards_point(navigationAgent.get_next_location(), delta)
+				print(navigationAgent.get_final_location())
+				if navigationAgent.get_final_location() == navigationAgent.get_next_location():
+					arrival_to(navigationAgent.get_next_location(), delta, 3)
+				else:
+					acellerate_towards_point(navigationAgent.get_next_location(), delta)
 			else:
 				wanderController.start_wander_timer(rand_range(1, 3))
 				state = IDLE
@@ -95,25 +105,39 @@ func _physics_process(delta):
 			pass
 	
 		ANTICIPATION:
-			var player = PlayerFollowRange.player
-			if player == null:
-				state = IDLE
+			if TYPE == "RANGED":
+				var player = PlayerFollowRange.player
+				if player == null:
+					state = IDLE
+				else:
+					var ranged_vector = (player.global_position - rangedHitboxPivot.global_position).normalized()
+					rangedHitboxPivot.rotation = ranged_vector.angle()
 			else:
-				var ranged_vector = (player.global_position - rangedHitboxPivot.global_position).normalized()
-				rangedHitboxPivot.rotation = ranged_vector.angle()
+				var player = PlayerFollowRange.player
+				if player != null:
+					navigationAgent.set_target_location(PlayerDetection.get_target_position())
+					if navigationAgent.get_final_location() == navigationAgent.get_next_location():
+						arrival_to(navigationAgent.get_next_location(), delta, 3)
+					else:
+						acellerate_towards_point(navigationAgent.get_next_location(), delta)
+				else:
+					wanderController.start_wander_timer(rand_range(1, 3))
+					state = IDLE
 
 	if softCollision.is_colliding():
 		velocity += softCollision.get_push_vector() * 400 * delta 
 	move_and_slide(velocity)
 
-func arrival_to(point, delta):
+func arrival_to(point, delta, slowing_radius=null):
+	if slowing_radius == null:
+		slowing_radius = SLOWING_RADIUS
 	var direction = point - global_position
 	sprite.flip_h = direction.x < 0
 	
 	var distance = direction.length()
 	var desired_velocity = MAX_SPEED * direction.normalized()
 	
-	if distance < SLOWING_RADIUS:
+	if distance < slowing_radius:
 		desired_velocity = MAX_SPEED * direction.normalized() * (distance / SLOWING_RADIUS)
 	
 	velocity = velocity.move_toward(desired_velocity, ACELLERATION * delta)
@@ -187,19 +211,26 @@ func _on_Conductor_quarter_passed(beat):
 			var player = PlayerFollowRange.player
 			if player != null:
 				if TYPE == 'MELEE' and PlayerDetection.is_within_attack_range(global_position):
-					state = ATTACK
-					attackDurationTimer.start()
-					var attack_direction = (player.global_position - global_position).normalized()
-					velocity = attack_direction * 200
-					hitbox.enable()
+					state = ANTICIPATION
 				elif TYPE == 'RANGED' and PlayerDetection.is_within_attack_range(global_position):
 					velocity = Vector2.ZERO
 					state = ANTICIPATION
+					var attack_direction = (player.global_position - global_position).normalized()
+					rangedHitbox.visible = true
 				attack_chance = STAR_ATTACK_CHANCE
 		else:
 			attack_chance += ATTACK_CHANCE_INCREASE
 	else:
 		attackAnticipationTimer.start()
+
+
+func _on_Conductor_eight_passed(beat, fract):
+	if fract == 3 and state == ANTICIPATION and TYPE == "MELEE":
+		var player = PlayerFollowRange.player
+		if player != null:
+			var attack_direction = (player.global_position - global_position).normalized()
+			tween.interpolate_property(self, "position", position, position - attack_direction * 10, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+			tween.start()
 
 func _on_Conductor_quarter_will_pass(beat):
 	pass
@@ -215,6 +246,7 @@ func _on_AttackDurationTimer_timeout():
 	if TYPE == 'RANGED':
 		PlayerDetection.recalculate_vector()
 		state = CHASE
+		rangedHitbox.visible = false
 	else:
 		PlayerDetection.recalculate_vector()
 		state = CHASE
@@ -222,5 +254,11 @@ func _on_AttackDurationTimer_timeout():
 
 func _on_AttackAnticipationTimer_timeout():
 	state = ATTACK
+	if TYPE == "MELEE":
+		var player = PlayerFollowRange.player
+		var attack_direction = (player.global_position - global_position).normalized()
+		velocity = attack_direction * 200
+		hitbox.enable()
+	else:
+		rangedHitbox.enable()
 	attackDurationTimer.start()
-	rangedHitbox.enable()

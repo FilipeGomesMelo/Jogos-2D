@@ -35,6 +35,3 @@ size_flags_vertical = 0
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}

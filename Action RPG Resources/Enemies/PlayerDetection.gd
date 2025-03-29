@@ -17,16 +17,24 @@ func can_see_player():
 func _on_PlayerDetection_body_entered(body):
 	player = body
 	vector = (self.global_position - player.global_position).normalized() * target_radius
+	var angle = deg2rad(rand_range(-45, 45))
+	vector = vector.rotated(angle)
 
 func recalculate_vector():
 	if player != null:
 		vector = (self.global_position - player.global_position).normalized() * target_radius
+		var angle = deg2rad(rand_range(-45, 45))
+		vector = vector.rotated(angle)
 
 func _on_PlayerDetection_body_exited(_body):
 	player = null
 
 func get_target_position():
 	if player:
+		var current_vector = (self.global_position - player.global_position).normalized() * target_radius
+		var angle = rad2deg(acos(vector.normalized().dot(current_vector.normalized())))
+		if angle > 45:
+			recalculate_vector()
 		return player.global_position + vector
 	else:
 		return Vector2.ZERO

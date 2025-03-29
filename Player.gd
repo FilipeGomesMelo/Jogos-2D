@@ -11,8 +11,8 @@ export var ATACK_COOLDOWN = 0.1
 export var EARLY_INPUT_TOLERANCE = 0.25
 export var LATE_INPUT_TOLERANCE = 0.25
 export var BUFFER_TIME = 0.25
-export var PERFECT_EARLY_INPUT_TOLERANCE = 0.1
-export var PERFECT_LATE_INPUT_TOLERANCE = 0.1
+export var PERFECT_EARLY_INPUT_TOLERANCE = 0.15
+export var PERFECT_LATE_INPUT_TOLERANCE = 0.15
 export var DASH_LIMIT = 3
 
 enum {
@@ -27,11 +27,14 @@ var velocity = Vector2.ZERO
 var roll_vector = Vector2.DOWN
 var stats = PlayerStats
 var last_input
+var last_input_time
 var last_beat_time
 var dash_counter = 0
 var attack_counter = 0
 var action_taken = false
-var attack_vector = Vector2.ZERO 
+var attack_vector = Vector2.ZERO
+var activate_roll_timer = false
+var activate_attack_timer = false
 
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
@@ -43,6 +46,7 @@ onready var rollTimer = $RollTimer
 onready var atackTimer = $AtackTimer
 onready var metronomePlayer = $MetronomeSound
 onready var rollIndicator = $Sprite/RollIndicator
+
 
 
 func _ready():
@@ -102,18 +106,24 @@ func move_state(delta):
 	var current_time = OS.get_ticks_msec() / 1000.0
 	if Input.is_action_just_pressed("dash_attack") and atackTimer.is_stopped() and rollTimer.is_stopped() and attack_counter < DASH_LIMIT and dash_counter < DASH_LIMIT:
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
+			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
+				metronomePlayer.play()
 			state = DASH_ATACK
 			action_taken = true
 			attack_counter += 1
 			dash_counter += 1
 			if attack_counter >= DASH_LIMIT:
+				rollIndicator.visible = true
 				atackTimer.start(ATACK_COOLDOWN)
 			if dash_counter >= DASH_LIMIT:
-				rool_cooldown_indicator()
+				activate_roll_timer = true
 		else:
 			last_input = "Dash Attack"
+			last_input_time = current_time
 	if Input.is_action_just_pressed("Atack") and atackTimer.is_stopped() and attack_counter < DASH_LIMIT:
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
+			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
+				metronomePlayer.play()
 			state = ATACK
 			action_taken = true
 			attack_counter += 1
@@ -121,15 +131,19 @@ func move_state(delta):
 				atackTimer.start(ATACK_COOLDOWN)
 		else:
 			last_input = "Atack"
+			last_input_time = current_time
 	if Input.is_action_just_pressed("Roll") and rollTimer.is_stopped() and dash_counter < DASH_LIMIT:
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
+			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
+				metronomePlayer.play()
 			state = ROLL
 			action_taken = true
 			dash_counter += 1
 			if dash_counter >= DASH_LIMIT:
-				rool_cooldown_indicator()
+				activate_roll_timer = false
 		else:
 			last_input = "Roll"
+			last_input_time = current_time
 
 func roll_state(_delta):
 	animationState.travel("Roll")
@@ -149,16 +163,13 @@ func dash_attack_state(_delta):
 	move_and_slide(velocity)
 
 func roll_animation_finished():
-	# rollTimer.start(ROLL_COOLDOWN)
 	state = MOVE
 	velocity = MAX_SPEED * velocity.normalized()
 
 func atack_animation_finished():
-	# atackTimer.start(ATACK_COOLDOWN)
 	state = MOVE
 
 func _on_Hurtbox_area_entered(area):
-	print('entered')
 	if !hurtbox.invincible:
 		stats.health -= area.damage
 		hurtbox.start_invincibility(0.75)
@@ -177,9 +188,16 @@ func _on_Hurtbox_invincibility_ended():
 
 func _on_Conductor_quarter_passed(beat):
 	last_beat_time = OS.get_ticks_msec() / 1000.0
+	if last_input_time:
+		if last_beat_time - last_input_time <= PERFECT_EARLY_INPUT_TOLERANCE:
+			metronomePlayer.play()
+	last_input_time = null
 	#metronomePlayer.play()
 	var action_taken_previous_beat = action_taken
 	action_taken = false
+	if activate_roll_timer:
+		atackTimer.start(ATACK_COOLDOWN)
+		rool_cooldown_indicator()
 	if last_input == "Dash Attack" and atackTimer.is_stopped() and rollTimer.is_stopped():
 		state = DASH_ATACK
 		action_taken = true
@@ -187,8 +205,7 @@ func _on_Conductor_quarter_passed(beat):
 		dash_counter += 1
 		if attack_counter >= DASH_LIMIT and atackTimer.is_stopped():
 			atackTimer.start(ATACK_COOLDOWN)
-		if dash_counter >= DASH_LIMIT and rollTimer.is_stopped():
-			rool_cooldown_indicator()
+			activate_roll_timer = true
 	if last_input == "Atack" and atackTimer.is_stopped():
 		state = ATACK
 		action_taken = true
@@ -203,10 +220,10 @@ func _on_Conductor_quarter_passed(beat):
 		action_taken = true
 		dash_counter += 1
 		if dash_counter >= DASH_LIMIT and rollTimer.is_stopped():
-			rool_cooldown_indicator()
+			activate_roll_timer = true
 	else:
 		if not action_taken_previous_beat and dash_counter and rollTimer.is_stopped():
-			rool_cooldown_indicator()
+			activate_roll_timer = true
 	
 	last_input = null
 
@@ -225,6 +242,7 @@ func _on_AtackTimer_timeout():
 	
 func rool_cooldown_indicator():
 	rollIndicator.visible = true
+	activate_roll_timer = false
 	rollTimer.start(ROLL_COOLDOWN)
 	var tween = Tween.new()
 	add_child(tween)
