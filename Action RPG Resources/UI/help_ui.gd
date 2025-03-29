@@ -1,5 +1,9 @@
 extends Control
 
+var high_score = 0
+var current_score: int
+var previous_score: int
+
 var hearts = 4 setget set_hearts
 var max_hearts = 4 setget set_max_hearts
 
@@ -41,4 +45,5 @@ func _on_Conductor_quarter_passed(beat):
 	bigHeart = !bigHeart
 	
 	tween.start()
+
 
