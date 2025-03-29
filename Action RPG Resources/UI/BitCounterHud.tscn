@@ -6,9 +6,6 @@
 
 [node name="BitCounter" type="Control"]
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 circle_texture = ExtResource( 4 )
 
 [node name="Endzone" type="TextureRect" parent="."]

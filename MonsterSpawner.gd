@@ -23,27 +23,23 @@ func _ready():
 func spawn_enemy():
 	if enemies.size() >= max_enemies:
 		return
-	
-
 	var enemy = enemy_scene.instance()
+	if randf() <= 0.25:
+		enemy.update_type('RANGED')
 	enemy.position = generate_random_vector() + self.position
 	get_parent().add_child(enemy)
 	enemies.append(enemy)
-	print(enemies)
-	print(enemy)
 	
 	enemy.connect("tree_exited", self, "_on_enemy_died", [enemy])
 
 func _on_Timer_timeout():
-	print("Timeout! Enemies count:", enemies.size())
 	if enemies.size() < max_enemies:
 		spawn_enemy()
 
 func _on_enemy_died(enemy):
 	if enemy in enemies:
-		enemies.erase(enemy)
-		print("Inimigo removido da lista. Total restante:", enemies.size())
-
+		enemies.erase(enemy)  # Remove o inimigo da lista
+		
 func generate_random_vector() -> Vector2:
 	var random_vector := Vector2(rand_range(-1, 1), rand_range(-1, 1))
 	random_vector = random_vector.normalized() * randf() * spawn_radius
