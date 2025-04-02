@@ -92,7 +92,7 @@ func _physics_process(delta):
 			var player = PlayerFollowRange.player
 			if player != null:
 				navigationAgent.set_target_location(PlayerDetection.get_target_position())
-				print(navigationAgent.get_final_location())
+				# print(navigationAgent.get_final_location())
 				if navigationAgent.get_final_location() == navigationAgent.get_next_location():
 					arrival_to(navigationAgent.get_next_location(), delta, 3)
 				else:

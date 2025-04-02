@@ -15,8 +15,5 @@ margin_right = 176.0
 margin_bottom = 180.756
 texture = ExtResource( 2 )
 expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BeatsContainer" type="Node2D" parent="."]

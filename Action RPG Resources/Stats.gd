@@ -17,8 +17,27 @@ func set_health(value):
 		value = 4
 	health = value
 	emit_signal("health_changed", health)
+	
 	if health <= 0:
 		emit_signal("no_health")
+		
+		# Criando um timer temporário para esperar 3 segundos
+		var timer = Timer.new()
+		add_child(timer)  # Adiciona o timer como filho da cena
+		timer.wait_time = 3  # Define o tempo de espera
+		timer.one_shot = true  # Faz com que o timer execute uma vez
+		timer.start()
+		
+		# Espera 3 segundos para chamar a cena do menu
+		yield(timer, "timeout")
+		
+		# Atualizando os scores
+		if HelpUi.current_score > HelpUi.high_score:
+			HelpUi.high_score = HelpUi.current_score
+				
+		HelpUi.previous_score = HelpUi.current_score
+		# Carrega a cena do menu
+		get_tree().change_scene("res://main_menu.tscn")
 
 func _ready():
 	health = max_health
