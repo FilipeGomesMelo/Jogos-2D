@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Action RPG Resources/Player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Action RPG Resources/World/Bush.tscn" type="PackedScene" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://Action RPG Resources/Enemies/MonsterSpawner.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Action RPG Resources/UI/montreal/Montreal-Regular.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Action RPG Resources/UI/BitCounterHud.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Action RPG Resources/UI/ComboBar.tscn" type="PackedScene" id=16]
 
 [sub_resource type="DynamicFont" id=1]
 size = 10
@@ -350,6 +351,8 @@ margin_bottom = 54.6301
 custom_fonts/normal_font = SubResource( 1 )
 text = "CURRENT SCORE 9999"
 script = ExtResource( 7 )
+
+[node name="ComboBar" parent="CanvasLayer" instance=ExtResource( 16 )]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 10 )
