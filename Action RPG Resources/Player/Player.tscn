@@ -9,7 +9,7 @@
 [ext_resource path="res://Action RPG Resources/Music and Sounds/Swipe.wav" type="AudioStream" id=7]
 [ext_resource path="res://Action RPG Resources/Music and Sounds/Evade.wav" type="AudioStream" id=8]
 [ext_resource path="res://Action RPG Resources/white_color_shader.gdshader" type="Shader" id=9]
-[ext_resource path="res://Action RPG Resources/UI/RollIndicator.png" type="Texture" id=10]
+[ext_resource path="res://Action RPG Resources/UI/Hourglass.png" type="Texture" id=10]
 [ext_resource path="res://Action RPG Resources/Music and Sounds/metronome.mp3" type="AudioStream" id=11]
 
 [sub_resource type="ShaderMaterial" id=1]
@@ -1086,8 +1086,8 @@ frame = 18
 
 [node name="RollIndicator" type="Sprite" parent="Sprite"]
 visible = false
-position = Vector2( 10.6432, -17.8396 )
-scale = Vector2( 0.0403878, 0.0249268 )
+position = Vector2( 9.89903, -15.5217 )
+scale = Vector2( 0.276662, 0.219123 )
 z_index = 4096
 texture = ExtResource( 10 )
 

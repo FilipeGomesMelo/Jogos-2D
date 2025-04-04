@@ -4,7 +4,7 @@
 [ext_resource path="res://Action RPG Resources/UI/montreal/Montreal-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Action RPG Resources/UI/kirifont/KiriFont.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://main_menu.gd" type="Script" id=4]
-[ext_resource path="res://Action RPG Resources/Music and Sounds/Endless Horizons.mp3" type="AudioStream" id=5]
+[ext_resource path="res://Action RPG Resources/Music and Sounds/mp4-to-mp3.mp3" type="AudioStream" id=5]
 [ext_resource path="res://PrevScore.gd" type="Script" id=6]
 [ext_resource path="res://MaxScore.gd" type="Script" id=7]
 

@@ -35,6 +35,7 @@ var action_taken = false
 var attack_vector = Vector2.ZERO
 var activate_roll_timer = false
 var activate_attack_timer = false
+var nonActionBeatCounter = 0
 
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
@@ -117,9 +118,11 @@ func move_state(delta):
 				atackTimer.start(ATACK_COOLDOWN)
 			if dash_counter >= DASH_LIMIT:
 				activate_roll_timer = true
+			updateComboProgress(true, 18)
 		else:
 			last_input = "Dash Attack"
 			last_input_time = current_time
+			updateComboProgress(false, 0)
 	if Input.is_action_just_pressed("Atack") and atackTimer.is_stopped() and attack_counter < DASH_LIMIT:
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
@@ -129,9 +132,11 @@ func move_state(delta):
 			attack_counter += 1
 			if attack_counter >= DASH_LIMIT:
 				atackTimer.start(ATACK_COOLDOWN)
+			updateComboProgress(true, 18)			
 		else:
 			last_input = "Atack"
 			last_input_time = current_time
+			updateComboProgress(false, 0)			
 	if Input.is_action_just_pressed("Roll") and rollTimer.is_stopped() and dash_counter < DASH_LIMIT:
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
@@ -141,9 +146,11 @@ func move_state(delta):
 			dash_counter += 1
 			if dash_counter >= DASH_LIMIT:
 				activate_roll_timer = false
+			updateComboProgress(true, 18)			
 		else:
 			last_input = "Roll"
 			last_input_time = current_time
+			updateComboProgress(false, 0)			
 
 func roll_state(_delta):
 	animationState.travel("Roll")
@@ -224,7 +231,12 @@ func _on_Conductor_quarter_passed(beat):
 	else:
 		if not action_taken_previous_beat and dash_counter and rollTimer.is_stopped():
 			activate_roll_timer = true
-	
+	if not action_taken_previous_beat :
+		nonActionBeatCounter += 1
+		if(nonActionBeatCounter >= 4):
+			updateComboProgress(false, 3)
+	else: 
+		nonActionBeatCounter = 0
 	last_input = null
 
 
@@ -247,9 +259,18 @@ func rool_cooldown_indicator():
 	var tween = Tween.new()
 	add_child(tween)
 	# print(rollIndicator)
-	tween.interpolate_property(rollIndicator, "scale", Vector2(0.04, 0.025), Vector2(0.06, 0.035), 0.5)
+	tween.interpolate_property(rollIndicator, "scale", Vector2(0.277, 0.219), Vector2(0.377, 0.319), 1)
 	tween.start()
 	
 	yield(get_tree().create_timer(ROLL_COOLDOWN), "timeout")
 	
 	rollIndicator.visible = false
+
+func updateComboProgress(success: bool, value: int):
+	if success:
+		ComboBarManager.set_progress_bar_height(ComboBarManager.progressBarHeight + 18)
+	else:
+		if value == 0:
+			ComboBarManager.set_progress_bar_height(0)
+		else:
+			ComboBarManager.set_progress_bar_height(ComboBarManager.progressBarHeight - value)

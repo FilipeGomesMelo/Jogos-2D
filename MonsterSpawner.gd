@@ -57,7 +57,7 @@ func _on_Timer_timeout():
 func _on_enemy_died(enemy):
 	if enemy in enemies:
 		enemies.erase(enemy)  # Remove o inimigo da lista
-		HelpUi.current_score += points_for_kill
+		HelpUi.current_score += points_for_kill + ComboBarManager.progressBarHeight
 		
 func generate_random_vector() -> Vector2:
 	var random_vector := Vector2(rand_range(-1, 1), rand_range(-1, 1))
