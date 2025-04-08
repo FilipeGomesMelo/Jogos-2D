@@ -61,6 +61,7 @@ func _ready():
 	if TYPE == 'MELEE':
 		hitbox = meleeHitbox
 		MAX_SPEED += MELEE_SPEED_BOOST * MAX_SPEED
+		sprite.material = null
 	else:
 		hitbox = rangedHitbox
 		PlayerDetection.set_attack_radius(200)
