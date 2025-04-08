@@ -13,6 +13,9 @@ margin_bottom = 19.457
 rect_rotation = 45.0
 rect_scale = Vector2( 0.5, 0.5 )
 script = ExtResource( 4 )
+__meta__ = {
+"_edit_horizontal_guides_": [  ]
+}
 
 [node name="ComboBarEmpty" type="TextureRect" parent="."]
 rect_rotation = 45.0

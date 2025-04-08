@@ -233,7 +233,7 @@ func _on_Conductor_quarter_passed(beat):
 			activate_roll_timer = true
 	if not action_taken_previous_beat :
 		nonActionBeatCounter += 1
-		if(nonActionBeatCounter >= 4):
+		if(nonActionBeatCounter >= 6):
 			updateComboProgress(false, 3)
 	else: 
 		nonActionBeatCounter = 0
