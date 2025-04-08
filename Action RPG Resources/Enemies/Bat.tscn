@@ -195,6 +195,7 @@ max_health = 2
 position = Vector2( 0, -12 )
 
 [node name="RangedHitbox" parent="RangedHitboxPivot" instance=ExtResource( 7 )]
+visible = false
 collision_mask = 4
 damage = 0.5
 
@@ -218,6 +219,7 @@ material = SubResource( 18 )
 position = Vector2( 158, 0 )
 rotation = -1.57079
 frames = SubResource( 27 )
+frame = 1
 playing = true
 flip_v = true
 

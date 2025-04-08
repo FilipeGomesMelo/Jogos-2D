@@ -14,6 +14,8 @@ export var BUFFER_TIME = 0.25
 export var PERFECT_EARLY_INPUT_TOLERANCE = 0.15
 export var PERFECT_LATE_INPUT_TOLERANCE = 0.15
 export var DASH_LIMIT = 3
+export var CORRECT_TIMING_REWARD = 9
+export var INACTION_PENALTY = 3
 
 enum {
 	MOVE,
@@ -35,6 +37,7 @@ var action_taken = false
 var attack_vector = Vector2.ZERO
 var activate_roll_timer = false
 var activate_attack_timer = false
+var nonActionBeatCounter = 0
 
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
@@ -107,6 +110,9 @@ func move_state(delta):
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
 				metronomePlayer.play()
+				updateComboProgress(true, CORRECT_TIMING_REWARD)
+			else:
+				updateComboProgress(false, 0)
 			state = DASH_ATACK
 			action_taken = true
 			attack_counter += 1
@@ -123,6 +129,9 @@ func move_state(delta):
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
 				metronomePlayer.play()
+				updateComboProgress(true, CORRECT_TIMING_REWARD)
+			else:
+				updateComboProgress(false, 0)
 			state = ATACK
 			action_taken = true
 			attack_counter += 1
@@ -135,6 +144,9 @@ func move_state(delta):
 		if current_time - last_beat_time <= LATE_INPUT_TOLERANCE and not action_taken:
 			if current_time - last_beat_time <= PERFECT_LATE_INPUT_TOLERANCE:
 				metronomePlayer.play()
+				updateComboProgress(true, CORRECT_TIMING_REWARD)
+			else:
+				updateComboProgress(false, 0)
 			state = ROLL
 			action_taken = true
 			dash_counter += 1
@@ -190,6 +202,9 @@ func _on_Conductor_quarter_passed(beat):
 	if last_input_time:
 		if last_beat_time - last_input_time <= PERFECT_EARLY_INPUT_TOLERANCE:
 			metronomePlayer.play()
+			updateComboProgress(true, CORRECT_TIMING_REWARD)
+		else:
+			updateComboProgress(false, 0)
 	last_input_time = null
 	#metronomePlayer.play()
 	var action_taken_previous_beat = action_taken
@@ -223,7 +238,12 @@ func _on_Conductor_quarter_passed(beat):
 	else:
 		if not action_taken_previous_beat and dash_counter and rollTimer.is_stopped():
 			activate_roll_timer = true
-	
+	if not action_taken_previous_beat :
+		nonActionBeatCounter += 1
+		if(nonActionBeatCounter >= 6):
+			updateComboProgress(false, INACTION_PENALTY)
+	else: 
+		nonActionBeatCounter = 0
 	last_input = null
 
 
@@ -245,9 +265,18 @@ func rool_cooldown_indicator():
 	rollTimer.start(ROLL_COOLDOWN)
 	var tween = Tween.new()
 	add_child(tween)
-	tween.interpolate_property(rollIndicator, "scale", Vector2(0.04, 0.025), Vector2(0.06, 0.035), 0.5)
+	tween.interpolate_property(rollIndicator, "scale", Vector2(0.277, 0.219), Vector2(0.377, 0.319), 1)
 	tween.start()
 	
 	yield(get_tree().create_timer(ROLL_COOLDOWN), "timeout")
 	
 	rollIndicator.visible = false
+
+func updateComboProgress(success: bool, value: int):
+	if success:
+		ComboBarManager.set_progress_bar_height(ComboBarManager.progressBarHeight + value)
+	else:
+		if value == 0:
+			ComboBarManager.set_progress_bar_height(0)
+		else:
+			ComboBarManager.set_progress_bar_height(ComboBarManager.progressBarHeight - value)

@@ -2,7 +2,7 @@ extends Node2D
 
 export (PackedScene) var enemy_scene
 export var spawn_time = 10.0  # Tempo base entre cada spawn
-export var max_enemies = 2   # Número máximo de inimigos ativos
+export var max_enemies = 3  # Número máximo de inimigos ativos
 export var spawn_radius = 8.0 # Raio do Spawn
 export var difficulty_increase_rate = 0.98  # Quanto o tempo de spawn diminui a cada spawn
 export var max_speed_increase = 5  # Aumento da velocidade dos inimigos por spawn
@@ -19,12 +19,9 @@ func _ready():
 	timer.one_shot = false  # Continua rodando
 	add_child(timer)
 	timer.connect("timeout", self, "_on_Timer_timeout")
-	timer.start()
-	
+	timer.start(1)
 
 func spawn_enemy():
-	if enemies.size() >= max_enemies:
-		return
 	print("enemies: ", enemies.size())
 	var enemy = enemy_scene.instance()
 	
@@ -43,7 +40,7 @@ func spawn_enemy():
 	enemy.connect("tree_exited", self, "_on_enemy_died", [enemy])
 
 func _on_Timer_timeout():
-	if enemies.size() < max_enemies:
+	if enemies.size() <= max_enemies:
 		spawn_enemy()
 	
 	# Reduz o tempo de spawn para aumentar a frequência de inimigos
@@ -57,8 +54,8 @@ func _on_Timer_timeout():
 func _on_enemy_died(enemy):
 	if enemy in enemies:
 		enemies.erase(enemy)  # Remove o inimigo da lista
-		HelpUi.current_score += points_for_kill
-		
+		HelpUi.current_score += points_for_kill + ComboBarManager.progressBarHeight
+
 func generate_random_vector() -> Vector2:
 	var random_vector := Vector2(rand_range(-1, 1), rand_range(-1, 1))
 	random_vector = random_vector.normalized() * randf() * spawn_radius

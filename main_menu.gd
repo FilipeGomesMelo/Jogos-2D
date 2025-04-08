@@ -17,6 +17,8 @@ func _ready():
 
 
 func _on_Start_pressed():
+	PlayerStats.set_health(4)
+	HelpUi.current_score = 0
 	get_tree().change_scene("res://World.tscn") # Replace with function body.
 
 

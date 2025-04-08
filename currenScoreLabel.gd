@@ -5,7 +5,7 @@ extends RichTextLabel
 # var a = 2
 # var b = "text"
 
-var default_text = "CURRENT SCORE: "
+var default_text = "SCORE: "
 
 
 # Called when the node enters the scene tree for the first time.
