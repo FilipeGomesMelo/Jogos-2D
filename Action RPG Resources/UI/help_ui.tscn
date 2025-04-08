@@ -10,9 +10,6 @@ margin_top = 0.0404205
 margin_right = 320.319
 margin_bottom = 27.0404
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HeartUIEmpty" type="TextureRect" parent="."]
 margin_left = 2.0
