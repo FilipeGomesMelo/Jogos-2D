@@ -40,8 +40,8 @@ func _on_Conductor_quarter_passed(beat):
 	var tween = Tween.new()
 	add_child(tween)
 
-	tween.interpolate_property(circle, "rect_position", circle.rect_position, endzone.rect_position, CIRCLE_SPEED, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR)
-	tween.interpolate_property(circle2, "rect_position", circle2.rect_position, endzone.rect_position, CIRCLE_SPEED, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR)	
+	tween.interpolate_property(circle, "rect_position", circle.rect_position, endzone.rect_position + endzone.rect_pivot_offset, CIRCLE_SPEED, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR)
+	tween.interpolate_property(circle2, "rect_position", circle2.rect_position, endzone.rect_position + endzone.rect_pivot_offset, CIRCLE_SPEED, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR)	
 	# Conectar diretamente o sinal de finalização da animação
 	tween.connect("tween_all_completed", self, "_on_tween_complete", [circle, circle2, tween])
 	

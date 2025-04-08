@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Action Rpg"
-run/main_scene="res://World.tscn"
+run/main_scene="res://main_menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -19,6 +19,7 @@ config/icon="res://icon.png"
 PlayerStats="*res://Action RPG Resources/Player/PlayerStats.tscn"
 Conductor="*res://Action RPG Resources/Player/Conductor.tscn"
 HelpUi="*res://Action RPG Resources/UI/help_ui.gd"
+ComboBarManager="*res://Action RPG Resources/UI/ComboBarManager.gd"
 
 [display]
 

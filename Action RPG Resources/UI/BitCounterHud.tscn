@@ -8,12 +8,13 @@
 script = ExtResource( 1 )
 circle_texture = ExtResource( 4 )
 
+[node name="BeatsContainer" type="Node2D" parent="."]
+
 [node name="Endzone" type="TextureRect" parent="."]
 margin_left = 144.0
 margin_top = 148.756
 margin_right = 176.0
 margin_bottom = 180.756
+rect_pivot_offset = Vector2( 2, 0 )
 texture = ExtResource( 2 )
 expand = true
-
-[node name="BeatsContainer" type="Node2D" parent="."]
