@@ -42,6 +42,7 @@ onready var attackDurationTimer = $AttackDurationTimer
 onready var rangedHitboxPivot = $RangedHitboxPivot
 onready var rangedHitbox = $RangedHitboxPivot/RangedHitbox
 onready var tween = $Tween
+onready var rangedActiveAnimatedSprite = $RangedHitboxPivot/RangedHitbox/Release
 
 var state = IDLE
 var velocity = Vector2.ZERO
@@ -92,7 +93,6 @@ func _physics_process(delta):
 			var player = PlayerFollowRange.player
 			if player != null:
 				navigationAgent.set_target_location(PlayerDetection.get_target_position())
-				print(navigationAgent.get_final_location())
 				if navigationAgent.get_final_location() == navigationAgent.get_next_location():
 					arrival_to(navigationAgent.get_next_location(), delta, 3)
 				else:
@@ -239,6 +239,7 @@ func _on_AttackDurationTimer_timeout():
 	attackCooldownTimer.start()
 	hitbox.disable()
 	rangedHitbox.disable()
+	rangedActiveAnimatedSprite.visible = false
 	var player = PlayerFollowRange.player
 	if player == null:
 		state = IDLE
@@ -261,4 +262,5 @@ func _on_AttackAnticipationTimer_timeout():
 		hitbox.enable()
 	else:
 		rangedHitbox.enable()
+		rangedActiveAnimatedSprite.visible = true
 	attackDurationTimer.start()

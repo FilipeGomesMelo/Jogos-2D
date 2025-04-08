@@ -55,7 +55,6 @@ func _ready():
 	animationTree.active = true
 	SwordHitbox.Knockback_vector = roll_vector
 	last_beat_time = OS.get_ticks_msec() / 1000.0
-	print(Conductor)
 	if Conductor:
 		Conductor.connect("quarter_passed", self, "_on_Conductor_quarter_passed")
 		Conductor.connect("quarter_will_pass", self, "_on_Conductor_quarter_will_pass")
@@ -246,7 +245,6 @@ func rool_cooldown_indicator():
 	rollTimer.start(ROLL_COOLDOWN)
 	var tween = Tween.new()
 	add_child(tween)
-	print(rollIndicator)
 	tween.interpolate_property(rollIndicator, "scale", Vector2(0.04, 0.025), Vector2(0.06, 0.035), 0.5)
 	tween.start()
 	

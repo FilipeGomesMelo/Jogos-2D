@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Player.png-547a04977db4a8f02a06c63daf071f6b.stex"
+path="res://.import/SP301_01.png-5bf97f5c8dee0a4ac52a48b31537d235.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Action RPG Resources/Player/Player.png"
-dest_files=[ "res://.import/Player.png-547a04977db4a8f02a06c63daf071f6b.stex" ]
+source_file="res://Action RPG Resources/Effects/SP301_01.png"
+dest_files=[ "res://.import/SP301_01.png-5bf97f5c8dee0a4ac52a48b31537d235.stex" ]
 
 [params]
 
